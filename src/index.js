@@ -17,6 +17,24 @@ export default function install (Vue, options = { global: true }) {
   const firstScriptTag = document.getElementsByTagName('script')[0]
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
 
+  const existingTag = document.querySelector("[src='https://www.youtube.com/player_api']")
+  if (!firstScriptTag.parentNode.contains(existingTag)) {
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
+  } else if (window.YT) {
+    container.YT = window.YT
+    const { PlayerState } = window.YT
+
+    container.events[PlayerState.ENDED] = 'ended'
+    container.events[PlayerState.PLAYING] = 'playing'
+    container.events[PlayerState.PAUSED] = 'paused'
+    container.events[PlayerState.BUFFERING] = 'buffering'
+    container.events[PlayerState.CUED] = 'cued'
+
+    Vue.nextTick(() => {
+      container.run()
+    })
+  }
+
   window.onYouTubeIframeAPIReady = function () {
     container.YT = YT
     const { PlayerState } = YT
