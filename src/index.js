@@ -12,13 +12,12 @@ export default function install (Vue, options = { global: true }) {
   }
   Vue.prototype.$youtube = { getIdFromURL, getTimeFromURL }
 
-  const tag = document.createElement('script')
-  tag.src = 'https://www.youtube.com/player_api'
   const firstScriptTag = document.getElementsByTagName('script')[0]
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
-
   const existingTag = document.querySelector("[src='https://www.youtube.com/player_api']")
   if (!firstScriptTag.parentNode.contains(existingTag)) {
+    const tag = document.createElement('script')
+    tag.src = 'https://www.youtube.com/player_api'
+    tag.async = true
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
   } else if (window.YT) {
     container.YT = window.YT
